@@ -2,6 +2,13 @@
 
 Control your quadrocopter with JavaScript.
 
+## Requirements
+
+* Arduino board (tested with Arduino Due) and A7105 chip
+* [node.js and npm](http://nodejs.org)
+* [bower](http://bower.io) (install with `npm install -g bower`)
+* [gulp](http://gulpjs.com) (install with `npm install -g gulp`)
+
 ## Setup instructions
 
 1. Follow the [instructions to build the transmitter station](http://www.instructables.com/id/Easy-Android-controllable-PC-Interfaceable-Relati/step5/Building-the-Arduino-driven-radio/) with a small modification:

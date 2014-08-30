@@ -18,6 +18,15 @@ Control your quadrocopter with JavaScript.
 
 5. Run `node start-repl.js`
 
+## Usage
+
+There are 4 ways to interact with the drone:
+
+1. Issue commands in the node.js REPL: start the REPL with `node start-repl.js` and then execute commands like `client.takeoff()`, `client.throttle(30)`, ...
+2. Control the drone with your keyboard: open the webapp at [http://localhost:3000/copter/keyboard](http://localhost:3000/copter/keyboard)
+3. Upload code in the webapp: open [http://localhost:3000/copter/code](http://localhost:3000/copter/code) in your browser
+4. Execute autonomous scripts: see [the examples directory](https://github.com/andihit/coptermanager-simple/tree/master/examples)
+
 ## Code example
 
 ```js

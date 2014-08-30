@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="page-header">{{ message }}</h1>
+
+<h2>{{ error.status }}</h2>
+
+<pre>{{ error.stack }}</pre>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends '../layout.html' %}
+
+{% block content %}
+<h1 class="page-header">Keyboard Control</h1>
+
+<h2>Current status</h2>
+<strong>Throttle:</strong> <span id="throttleVal"></span><br />
+<strong>Rudder:</strong> <span id="rudderVal"></span><br />
+<strong>Aileron:</strong> <span id="aileronVal"></span><br />
+<strong>Elevator:</strong> <span id="elevatorVal"></span><br />
+
+<h2>Flying</h2>
+Use your keyboard:<br />
+<strong>Up/Down:</strong> W/A<br />
+<strong>Rotate:</strong> A/D<br />
+<strong>Forward/Backward:</strong> Arrow up/down<br />
+<strong>Left/Right:</strong> Arrow left/right<br />
+
+<br /><br />
+
+<div id="buttonContainer" class="row">
+  <div class="col-md-2">
+    <button id="takeoffBtn" type="button" class="btn btn-success btn-lg">
+      <span class="glyphicon glyphicon-plane"></span> Takeoff
+    </button>
+  </div>
+
+  <div class="col-md-2">
+    <button id="landBtn" type="button" class="btn btn-primary btn-lg">
+      <span class="glyphicon glyphicon-home"></span> Land copter
+    </button>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+  new KeyboardControl('/api/execute');
+});
+</script>
+{% endblock %}

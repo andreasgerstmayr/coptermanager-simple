@@ -1,0 +1,39 @@
+{% extends '../layout.html' %}
+
+{% block content %}
+<h1 class="page-header">Launch a new copter</h1>
+
+<pre id="codeeditor">
+client.throttle(10);
+client.after(3000, function() {
+  client.rudder(10);
+});
+</pre>
+
+<div id="buttonContainer" class="row">
+  <div class="col-md-2">
+    <button id="executeBtn" type="button" class="btn btn-primary btn-lg">
+      <span class="glyphicon glyphicon-play"></span> Execute code
+    </button>
+    <button id="runningBtn" type="button" class="btn btn-info btn-lg hide" disabled="disabled">
+      <img src="/images/ajax-loader.gif" alt="loading"> Running...
+    </button>
+  </div>
+  <div class="col-md-2">
+    <button id="emergencyBtn" type="button" class="btn btn-danger btn-lg">
+      <span class="glyphicon glyphicon-fire"></span> Emergency exit
+    </button>
+  </div>
+</div>
+
+<pre id="consoleContainer">
+<strong>Console Log</strong>
+Click the above button to start your script!
+</pre>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  window.copterLauncher = new CodeControl('/api/execute');
+});
+</script>
+{% endblock %}

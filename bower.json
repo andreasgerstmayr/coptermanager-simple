@@ -1,0 +1,32 @@
+{
+  "name": "coptermanager",
+  "version": "0.1.0",
+  "authors": [
+    "Andreas Gerstmayr <andreas.gerstmayr@gmail.com>"
+  ],
+  "description": "Control your drones with an API",
+  "license": "MIT",
+  "homepage": "https://github.com/andihit/coptermanager_server",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "bootstrap": "~3.2.0",
+    "ace-builds": "~1.1.5"
+  },
+  "overrides": {
+    "ace-builds": {
+      "main": [
+        "src-min-noconflict/ace.js",
+        "src-min-noconflict/mode-javascript.js",
+        "src-min-noconflict/theme-xcode.js"
+      ]
+    }
+  }
+}

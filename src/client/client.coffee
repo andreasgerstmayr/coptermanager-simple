@@ -85,7 +85,7 @@ module.exports = class Client
   pollUntilBound: (cb) ->
     pollFn = =>
       if @bound
-        cb()
+        cb(result: 'success')
       else 
         @log.info 'not bound yet, waiting...'
         setTimeout(pollFn, 3000)

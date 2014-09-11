@@ -21,7 +21,7 @@ Control your quadrocopter with JavaScript.
 
 3. Open `arduino/arduino.ino` with the arduino IDE and send it to your arduino board
 
-4. Execute `npm install`, `bower install`, `gulp build` and `npm link`
+4. Execute `bower install`, `npm install`, `npm link` and `npm link coptermanager-simple`
 
 5. Run `node start-repl.js`
 

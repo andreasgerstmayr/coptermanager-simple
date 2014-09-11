@@ -2,7 +2,10 @@ var repl = require('repl');
 var colors = require('colors');
 var coptermanager = require('coptermanager-simple');
 
-var client = new coptermanager.Client({serialport: '/dev/tty.usbmodem1411'});
+var client = new coptermanager.Client({
+//    serialport: '/dev/tty.usbmodem1411' // unix
+    serialport: '\\\.\\COM14' // windows
+});
 var server = new coptermanager.Server(client);
 
 console.log("COPTERMANAGER".green.bold);

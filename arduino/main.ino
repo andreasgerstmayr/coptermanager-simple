@@ -81,17 +81,14 @@ void loop() {
     finishTime = micros();
     
     // calculate how long to wait before transmitting the next packet
-    waitTime = hubsanWait - (micros() - startTime);
-    
-    if (waitTime < 0)
-        waitTime = 0;
+    waitTime = hubsanWait - (finishTime - startTime);
     
     // wait that long
-    delayMicroseconds(waitTime);
+    if (waitTime > 0)
+        delayMicroseconds(waitTime);
     
     // start the timer again
     startTime = micros();
-  
   
   //Serial.println(A7105_ReadReg(0x00)); 
   //A7105_shoutchannel();

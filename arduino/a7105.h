@@ -2,8 +2,8 @@
 #define _IFACE_A7105_H_
 
 // constants for arduino pins
-#define RED_LED 52
-#define BLUE_LED 53
+#define RED_LED 8
+#define BLUE_LED 9
 #define CS_PIN 10 
 #define RED_ON() digitalWrite(RED_LED, HIGH);
 #define RED_OFF() digitalWrite(RED_LED, LOW);

@@ -8,6 +8,8 @@
 <strong>Rudder:</strong> <span id="rudderVal"></span><br />
 <strong>Aileron:</strong> <span id="aileronVal"></span><br />
 <strong>Elevator:</strong> <span id="elevatorVal"></span><br />
+<strong>LED:</strong> <span id="ledVal"></span><br />
+<strong>Flip:</strong> <span id="flipVal"></span><br />
 
 <h2>Flying</h2>
 Use your keyboard:<br />
@@ -15,7 +17,8 @@ Use your keyboard:<br />
 <strong>Rotate:</strong> A/D<br />
 <strong>Forward/Backward:</strong> Arrow up/down<br />
 <strong>Left/Right:</strong> Arrow left/right<br />
-
+<strong>Enable/Disable LEDs:</strong> L<br />
+<strong>Enable/Disable flips:</strong> F<br />
 <br /><br />
 
 <div id="buttonContainer" class="row">
@@ -35,7 +38,7 @@ Use your keyboard:<br />
 
 <script type="text/javascript">
 $(document).ready(function() {
-  new KeyboardControl('/api/execute');
+  new KeyboardControl('/api');
 });
 </script>
 {% endblock %}

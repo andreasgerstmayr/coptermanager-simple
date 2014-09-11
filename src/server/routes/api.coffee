@@ -20,6 +20,7 @@ router.post '/execute', (req, res) ->
 
   client.after 0, ->
     client.log.removeListener 'log', outputFn
+    client.resetAfterOffset()
     res.end()
 
 router.post '/control', (req, res) ->
@@ -29,6 +30,7 @@ router.post '/control', (req, res) ->
   async.concatSeries validPropertyNames, (name, cb) ->
     value = parseInt(req.query[name])
     client[name] value, (data) ->
+      client.resetAfterOffset()
       cb(null, data)
   , (err, results) ->
     res.json(results)
@@ -41,6 +43,7 @@ router.post '/setting', (req, res) ->
     fn = 'set' + name.charAt(0).toUpperCase() + name.slice(1)
     value = req.query[name]
     client[fn] value, (data) ->
+      client.resetAfterOffset()
       cb(null, data)
   , (err, results) ->
     res.json(results)

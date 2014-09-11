@@ -7,6 +7,9 @@ KeyCodes =
   S: 83
   A: 65
   D: 68
+  L: 76
+  F: 70
+
 
 class @KeyboardControl
 
@@ -15,6 +18,8 @@ class @KeyboardControl
     @rudder = 0x7F
     @aileron = 0x7F
     @elevator = 0x7F
+    @led = 'on'
+    @flip = 'off'
     @updateStatus()
 
     $(document).on 'keydown', @keyDown
@@ -22,56 +27,67 @@ class @KeyboardControl
     $('#landBtn').on 'click', @landBtnClicked
 
   updateStatus: ->
-    for name in ['throttle', 'rudder', 'aileron', 'elevator']
+    for name in ['throttle', 'rudder', 'aileron', 'elevator', 'led', 'flip']
       $("##{name}Val").text(this[name])
     return
 
-  sendCommand: (code) ->
+  sendCommand: (method) ->
     $.ajax
       type: 'POST'
-      dataType: 'json'
-      url: @endpoint,
-      data: {code: code},
+      url: @endpoint + method,
       success: (data) ->
-        console.log data
+        for d in data # one element per command
+          if d.result != 'success'
+            if d.error
+              alert d.error
+            else
+              alert "unknown error"
 
   keyDown: (e) =>
     switch e.keyCode
       when KeyCodes.W
         @throttle += 10
         @throttle = 0xFF if @throttle > 0xFF
-        @sendCommand("client.throttle(#{@throttle})")
+        @sendCommand("/control?throttle=#{@throttle}")
       when KeyCodes.S
         @throttle -= 10
         @throttle = 0 if @throttle < 0
-        @sendCommand("client.throttle(#{@throttle})")
+        @sendCommand("/control?throttle=#{@throttle}")
 
       when KeyCodes.A
         @rudder -= 10
         @rudder = 0x34 if @rudder < 0x34
-        @sendCommand("client.rudder(#{@rudder})")
+        @sendCommand("/control?rudder=#{@rudder}")
       when KeyCodes.D
         @rudder += 10
         @rudder = 0xCC if @rudder > 0xCC
-        @sendCommand("client.rudder(#{@rudder})")
+        @sendCommand("/control?rudder=#{@rudder}")
 
       when KeyCodes.Up
         @elevator += 10
         @elevator = 0xBC if @elevator > 0xBC
-        @sendCommand("client.elevator(#{@elevator})")
+        @sendCommand("/control?elevator=#{@elevator}")
       when KeyCodes.Down
         @elevator -= 10
         @elevator = 0x3E if @elevator < 0x3E
-        @sendCommand("client.elevator(#{@elevator})")
+        @sendCommand("/control?elevator=#{@elevator}")
 
       when KeyCodes.Left
         @aileron -= 10
         @aileron = 0x45 if @aileron < 0x45
-        @sendCommand("client.aileron(#{@aileron})")
+        @sendCommand("/control?aileron=#{@aileron}")
       when KeyCodes.Right
         @aileron += 10
         @aileron = 0xC3 if @aileron > 0xC3
-        @sendCommand("client.aileron(#{@aileron})")
+        @sendCommand("/control?aileron=#{@aileron}")
+
+      when KeyCodes.L
+        @led = if @led == 'on' then 'off' else 'on'
+        @sendCommand("/setting?led=#{@led}")
+
+      when KeyCodes.F
+        @flip = if @flip == 'on' then 'off' else 'on'
+        @sendCommand("/setting?flip=#{@flip}")
 
     @updateStatus()
 

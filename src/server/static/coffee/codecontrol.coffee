@@ -2,8 +2,6 @@
 class @CodeControl
   
   constructor: (@endpoint) ->
-    window.onerror = @javascriptError
-
     @setupEditor()
     $('#executeBtn').on 'click', @executeBtnClick
     $('#emergencyBtn').on 'click', @emergencyBtnClick
@@ -51,9 +49,6 @@ class @CodeControl
         if xhr.readyState == 4
           @showExecuteBtn()
 
-    xhr.open('POST', @endpoint, true)
+    xhr.open('POST', "#{@endpoint}/execute", true)
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
     xhr.send($.param({code: code}))
-
-  javascriptError: (error, file, lineno) ->
-    $('#consoleContainer').append "<p class='text-danger'>JavaScript error: #{error}, lineno: #{lineno}</p>"

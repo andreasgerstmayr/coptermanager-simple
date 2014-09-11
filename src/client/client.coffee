@@ -74,6 +74,9 @@ module.exports = class Client
     @afterOffset += duration
     return this
 
+  resetAfterOffset: ->
+    @afterOffset = 0
+
   exit: ->
     @log.info('exiting...')
     process.exit()
@@ -93,14 +96,18 @@ module.exports = class Client
     setTimeout(pollFn, 1000)
 
   bind: (cb) ->
-    @log.info("bind")
-    @driver.openSerialPort @port, @baudrate, (data) =>
-      if data.result == 'error'
-        @log.error data.error
-        cb(result: 'error')
-        @exit()
-      else
-        @pollUntilBound cb
+    if not @isBound()
+      @log.info("bind")
+      @driver.openSerialPort @port, @baudrate, (data) =>
+        if data.result == 'error'
+          @log.error data.error
+          cb(result: 'error')
+          @exit()
+        else
+          @pollUntilBound cb
+    else
+      @log.info("already bound")
+      cb(result: 'success')
 
   throttle: (value, cb = (->)) ->
     return if not @requireBound(cb)

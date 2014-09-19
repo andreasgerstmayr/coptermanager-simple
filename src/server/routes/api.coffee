@@ -48,4 +48,13 @@ router.post '/setting', (req, res) ->
   , (err, results) ->
     res.json(results)
 
+router.get '/state', (req, res) ->
+  client = req.app.get('client')
+  res.json({bound: client.isBound()})
+
+router.post '/reset', (req, res) ->
+  client = req.app.get('client')
+  client.resetTransmitter (data) ->
+    res.json(data)
+
 module.exports = router

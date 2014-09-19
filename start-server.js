@@ -11,12 +11,11 @@ var server = new coptermanager.Server(client);
 console.log("COPTERMANAGER".green.bold);
 console.log("=============\n".green.bold);
 
-client.bind(function(data) {
-  if (data.result == "success") {
-    console.log("\nCopter bound.".bold);
-
-    server.start(function() {
+server.start(function() {
+  client.bind(function(data) {
+    if (data.result == "success") {
+      console.log("\nCopter bound.".bold);
       client.startRepl();
-    });
-  }
+    }
+  });
 });

@@ -23,23 +23,31 @@ module.exports = class SerialPortDriver
         cb(result: 'error', error: "Serial port error: #{error}")
       else
         @serialPort.on 'data', @dataReceived
+        @sendStatePacket(cb)
+
+  sendPacket: (packet, cb = (->)) ->
+    @serialPort.write packet, (error, results) =>
+      if error
+        cb(result: 'error', error: "Serial port error: #{error}")
+      else
         cb(result: 'success')
+
 
   sendControlPacket: (throttle, rudder, aileron, elevator, cb = (->)) ->
     buffer = new Buffer([0x03, throttle, rudder, aileron, elevator])
-    @serialPort.write buffer, (error, results) =>
-      if error
-        cb(result: 'error', error: "Serial port error: #{error}")
-      else
-        cb(result: 'success')
+    @sendPacket(buffer, cb)
 
   sendSettingsPacket: (cmd, cb = (->)) ->
-    buffer = new Buffer([0x04, cmd])
-    @serialPort.write buffer, (error, results) =>
-      if error
-        cb(result: 'error', error: "Serial port error: #{error}")
-      else
-        cb(result: 'success')
+    buffer = new Buffer([0x04, cmd, 0, 0, 0])
+    @sendPacket(buffer, cb)
+
+  sendStatePacket: (cb = (->)) ->
+    buffer = new Buffer([0x01, 0, 0, 0, 0])
+    @sendPacket(buffer, cb)
+
+  sendResetPacket: (cb = (->)) ->
+    buffer = new Buffer([0x02, 0, 0, 0, 0])
+    @sendPacket(buffer, cb)
 
   closeSerialPort: (cb = (->)) ->
     @serialPort.close(cb)

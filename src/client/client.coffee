@@ -23,8 +23,9 @@ module.exports = class Client
     @driver = new SerialPortDriver
     @driver.on 'line', @lineReceived
 
-    @bound = false
     @reset()
+
+    setInterval @checkBindingState, 5000
 
   reset: ->
     @afterOffset = 0
@@ -33,11 +34,23 @@ module.exports = class Client
       rudder: 0x7F
       aileron: 0x7F
       elevator: 0x7F
+    @bound = false
+
+  resetTransmitter: (cb) ->
+    @reset()
+    @driver.sendResetPacket(cb)
 
   lineReceived: (line) =>
-    @log.arduino line
-    if line == 'Bound'
+    if line == 'Bound' and not @bound
       @bound = true
+      @log.arduino line
+    else if line == 'Not bound' and @bound
+      @bound = false
+      @log.arduino line
+      @reset()
+
+  checkBindingState: =>
+    @driver.sendStatePacket()
 
   isBound: ->
     return @bound
@@ -143,7 +156,7 @@ module.exports = class Client
 
   setFlip: (state, cb = (->)) ->
     return if not @requireBound(cb)
-    return if not @valueCheck(value, ['on', 'off'], cb)
+    return if not @valueCheck(state, ['on', 'off'], cb)
 
     @log.info("set flip #{magenta(state)}")
     @driver.sendSettingsPacket (if state == 'on' then 0x07 else 0x08), cb
@@ -153,7 +166,7 @@ module.exports = class Client
 
   setLed: (state, cb = (->)) ->
     return if not @requireBound(cb)
-    return if not @valueCheck(value, ['on', 'off'], cb)
+    return if not @valueCheck(state, ['on', 'off'], cb)
 
     @log.info("set flip #{magenta(state)}")
     @driver.sendSettingsPacket (if state == 'on' then 0x05 else 0x06), cb

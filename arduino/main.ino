@@ -1,3 +1,5 @@
+#define STATE_PACKET 1
+#define RESET_PACKET 2
 #define CONTROL_PACKET 3
 #define SETTING_PACKET 4
 #define LEDS_ON 0x05
@@ -11,8 +13,7 @@ void setup() {
   verbose = false;
   pinMode(RED_LED, OUTPUT);
   pinMode(BLUE_LED, OUTPUT);
-  RED_OFF();
-  BLUE_OFF();
+  
   Serial.begin(115200);
   Serial.flush();
   Serial.println("Initialising...");
@@ -20,13 +21,19 @@ void setup() {
   // SPI initialisation and mode configuration
   A7105_Setup();
   
-  // calibrate the chip and set the RF frequency, timing, transmission modes, session ID and channel
-  initialize();
-  
+  reset();
+  Serial.println("Initialisation Complete");
+}
+
+void reset() {
+  RED_OFF();
+  BLUE_OFF();
   rudder = aileron = elevator = 0x7F; 
   throttle = 0x00;
+  cycles = 0;
   
-  Serial.println("Initialisation Complete");
+  // calibrate the chip and set the RF frequency, timing, transmission modes, session ID and channel
+  initialize();
 }
 
 void loop() {  
@@ -40,7 +47,7 @@ void loop() {
       do {
           startval = Serial.read();
       }
-      while (startval != CONTROL_PACKET && startval != SETTING_PACKET);
+      while (startval != CONTROL_PACKET && startval != SETTING_PACKET && startval != STATE_PACKET && startval != RESET_PACKET);
 
       if (startval == CONTROL_PACKET) {
           throttle=Serial.read();
@@ -48,7 +55,6 @@ void loop() {
           aileron=Serial.read();
           elevator=Serial.read();
       }
-
       else if (startval == SETTING_PACKET) {
           command = Serial.read();
           if (command == LEDS_ON) {
@@ -67,6 +73,23 @@ void loop() {
           // clear unused bytes
           for ( int i = 0 ; i < 3 ; i++)
               Serial.read();
+      }
+      else if (startval == STATE_PACKET) {
+          // clear unused bytes
+          for ( int i = 0 ; i < 4 ; i++)
+              Serial.read();
+              
+          if (state >= DATA_1 && state <= DATA_5)
+              Serial.println("Bound");
+          else
+              Serial.println("Not bound");
+      }
+      else if (startval == RESET_PACKET) {
+          // clear unused bytes
+          for ( int i = 0 ; i < 4 ; i++)
+              Serial.read();
+              
+          reset();
       }
     }
     

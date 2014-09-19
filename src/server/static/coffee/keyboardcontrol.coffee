@@ -14,28 +14,43 @@ KeyCodes =
 class @KeyboardControl
 
   constructor: (@endpoint, copterid) ->
+    @reset()
+
+    $(document).on 'keydown', @keyDown
+    $('#takeoffBtn').on 'click', @takeoffBtnClicked
+    $('#landBtn').on 'click', @landBtnClicked
+    $('#resetLink').on 'click', @resetLinkClicked
+
+    setInterval @updateBindingState, 3000
+
+  reset: ->
     @throttle = 15
     @rudder = 0x7F
     @aileron = 0x7F
     @elevator = 0x7F
     @led = 'on'
     @flip = 'off'
+    $('#stateVal').text('not bound')
     @updateStatus()
-
-    $(document).on 'keydown', @keyDown
-    $('#takeoffBtn').on 'click', @takeoffBtnClicked
-    $('#landBtn').on 'click', @landBtnClicked
 
   updateStatus: ->
     for name in ['throttle', 'rudder', 'aileron', 'elevator', 'led', 'flip']
       $("##{name}Val").text(this[name])
     return
 
+  updateBindingState: =>
+    $.ajax
+      type: 'GET'
+      url: @endpoint + '/state',
+      success: (data) ->
+        $('#stateVal').text(if data.bound then 'bound' else 'not bound')
+
   sendCommand: (method) ->
     $.ajax
       type: 'POST'
       url: @endpoint + method,
       success: (data) ->
+        data = [].concat(data) # if data is not an array, make it an array
         for d in data # one element per command
           if d.result != 'success'
             if d.error
@@ -90,6 +105,10 @@ class @KeyboardControl
         @sendCommand("/setting?flip=#{@flip}")
 
     @updateStatus()
+
+  resetLinkClicked: (e) =>
+    @sendCommand '/reset'
+    @reset()
 
   takeoffBtnClicked: (e) =>
     @sendCommand('client.takeoff()')

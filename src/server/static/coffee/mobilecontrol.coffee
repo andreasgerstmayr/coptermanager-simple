@@ -68,8 +68,8 @@ class @MobileControl
       aileron = 0x7F + (0xC3 - 0x7F) * (-rdx)
 
     if rdy >= 0
-      elevator = 0x7F - (0x7F - 0x34) * rdy
+      elevator = 0x7F - (0x7F - 0x3E) * rdy
     else
-      elevator = 0x7F + (0xCC - 0x7F) * (-rdy)
+      elevator = 0x7F + (0xBC - 0x7F) * (-rdy)
 
     @sendCommand("/control?throttle=#{throttle}&rudder=#{rudder}&aileron=#{aileron}&elevator=#{elevator}")

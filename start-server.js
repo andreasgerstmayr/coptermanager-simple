@@ -6,7 +6,7 @@ var client = new coptermanager.Client({
 //    serialport: '/dev/tty.usbmodem1411' // unix
     serialport: 'COM8' // windows
 });
-var server = new coptermanager.Server(client);
+var server = new coptermanager.Server(client, '0.0.0.0');
 
 console.log("COPTERMANAGER".green.bold);
 console.log("=============\n".green.bold);
